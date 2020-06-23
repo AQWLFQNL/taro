@@ -1,20 +1,23 @@
 import { stacks } from './stack'
 import { history } from './history'
+import { ensure } from '@tarojs/shared'
 
 interface Option {
-  url: string
+  url?: string
   success?: Function
   fail?: Function
   complete?: Function
 }
 
-function navigate (option: Option, method: 'navigateTo' | 'redirectTo' | 'navigateBack') {
+function navigate (option: Option = {}, method: 'navigateTo' | 'redirectTo' | 'navigateBack') {
   const { url, success, complete, fail } = option
   let failReason
   try {
     if (method === 'navigateTo') {
+      ensure(!!url, method + '的 url 没有值')
       history.push(url)
     } else if (method === 'redirectTo') {
+      ensure(!!url, method + '的 url 没有值')
       history.replace(url)
     } else if (method === 'navigateBack') {
       history.goBack()
